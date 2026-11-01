@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#09090B">
+  <meta name="description" content="Your daily dose of unnecessary chaos. Underground mini-game arcade.">
+  <title>CHAOS CLUB</title>
+  
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- TOP BAR NAV -->
+    <header class="top-bar">
+      <div class="logo-group" onclick="showScreen('dashboard')">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">CHAOS_CLUB</span>
+      </div>
+      <div class="header-stats">
+        <div class="stat-badge">
+          <span class="stat-label">PTS</span>
+          <span id="nav-total-pts" class="stat-val highlight">0</span>
+        </div>
+        <button id="pwa-install-btn" class="install-btn hidden">INSTALL APP</button>
+      </div>
+    </header>
+
+    <!-- DASHBOARD SCREEN -->
+    <main id="screen-dashboard" class="screen active">
+      <section class="hero-banner">
+        <div class="hero-tag">STATUS: UNHINGED</div>
+        <h1 class="hero-title">WELCOME TO THE CHAOS.</h1>
+        <p class="hero-subtitle">Unfortunately, you have returned.</p>
+        <div class="microcopy" id="hero-microcopy">"Your brain has approximately three working cells."</div>
+      </section>
+
+      <!-- STATS OVERVIEW -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-card-title">TOTAL POINTS</span>
+          <span id="dash-total-pts" class="stat-card-num">0</span>
+          <span class="stat-sub">Lifetime Chaos</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-title">GAMES PLAYED</span>
+          <span id="dash-games-played" class="stat-card-num">0</span>
+          <span class="stat-sub">Wasted Time</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-title">PERSONAL BEST</span>
+          <span id="dash-personal-best" class="stat-card-num">0</span>
+          <span class="stat-sub">Single Run High</span>
+        </div>
+      </section>
+
+      <!-- DAILY CHALLENGE -->
+      <section class="daily-section">
+        <div class="panel-header">
+          <h2>DAILY DISAPPOINTMENT</h2>
+          <span id="daily-timer" class="badge-timer">RESET IN: 14H 22M</span>
+        </div>
+        <div class="daily-card" id="daily-card">
+          <div class="daily-info">
+            <h3 id="daily-title">Survive Button Panic with 50+ Pts</h3>
+            <p id="daily-desc">Don't mash like a total amateur today.</p>
+            <div class="progress-bar-bg"><div id="daily-progress" class="progress-bar-fill" style="width: 0%;"></div></div>
+          </div>
+          <button id="claim-daily-btn" class="btn-primary" disabled onclick="claimDailyReward()">REWARD +100</button>
+        </div>
+      </section>
+
+      <!-- GAME SELECTION -->
+      <section class="games-section">
+        <div class="panel-header">
+          <h2>SELECT YOUR POISON</h2>
+        </div>
+        <div class="games-grid">
+          
+          <!-- GAME 1 CARD -->
+          <div class="game-card" onclick="startGame('panic')">
+            <div class="game-badge">REACTION</div>
+            <h3 class="game-title">BUTTON PANIC</h3>
+            <p class="game-desc">20 seconds of contradictory orders. Obey or do nothing.</p>
+            <div class="game-meta">
+              <span>BEST: <strong id="best-panic">0</strong></span>
+              <button class="btn-play">PLAY &rarr;</button>
+            </div>
+          </div>
+
+          <!-- GAME 2 CARD -->
+          <div class="game-card" onclick="startGame('impostor')">
+            <div class="game-badge">OBSERVATION</div>
+            <h3 class="game-title">SPOT THE IMPOSTOR</h3>
+            <p class="game-desc">Find the odd symbol in a 3x3 grid before your eyes melt.</p>
+            <div class="game-meta">
+              <span>BEST: <strong id="best-impostor">0</strong></span>
+              <button class="btn-play">PLAY &rarr;</button>
+            </div>
+          </div>
+
+          <!-- GAME 3 CARD -->
+          <div class="game-card" onclick="startGame('quiz')">
+            <div class="game-badge">TRIVIA & LOGIC</div>
+            <h3 class="game-title">BRAINCELL.EXE</h3>
+            <p class="game-desc">10 rapid-fire questions to test if you're actually functional.</p>
+            <div class="game-meta">
+              <span>BEST: <strong id="best-quiz">0</strong></span>
+              <button class="btn-play">PLAY &rarr;</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ACHIEVEMENTS -->
+      <section class="achieve-section">
+        <div class="panel-header">
+          <h2>ACHIEVEMENTS OF QUESTIONABLE VALUE</h2>
+        </div>
+        <div class="achieve-grid" id="achievements-container">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+    </main>
+
+    <!-- GAME 1 SCREEN: BUTTON PANIC -->
+    <main id="screen-game-panic" class="screen">
+      <div class="game-header">
+        <button class="btn-back" onclick="showScreen('dashboard')">&larr; ABORT</button>
+        <div class="game-timer-display">TIME: <span id="panic-timer">20.0</span>s</div>
+        <div class="game-score-display">SCORE: <span id="panic-score">0</span></div>
+      </div>
+
+      <div class="panic-stage">
+        <div id="panic-instruction" class="instruction-box">GET READY...</div>
+        <div class="panic-buttons-grid">
+          <button class="panic-btn red" onclick="handlePanicBtn('red')">RED</button>
+          <button class="panic-btn blue" onclick="handlePanicBtn('blue')">BLUE</button>
+          <button class="panic-btn green" onclick="handlePanicBtn('green')">GREEN</button>
+          <button class="panic-btn yellow" onclick="handlePanicBtn('yellow')">YELLOW</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- GAME 2 SCREEN: SPOT THE IMPOSTOR -->
+    <main id="screen-game-impostor" class="screen">
+      <div class="game-header">
+        <button class="btn-back" onclick="showScreen('dashboard')">&larr; ABORT</button>
+        <div class="game-timer-display">TIME: <span id="impostor-timer">30.0</span>s</div>
+        <div class="game-score-display">SCORE: <span id="impostor-score">0</span></div>
+      </div>
+
+      <div class="impostor-stage">
+        <div class="stage-hint">FIND THE SYMBOL THAT DOES NOT BELONG</div>
+        <div class="impostor-grid" id="impostor-grid">
+          <!-- 3x3 cells generated dynamically -->
+        </div>
+      </div>
+    </main>
+
+    <!-- GAME 3 SCREEN: BRAINCELL.EXE -->
+    <main id="screen-game-quiz" class="screen">
+      <div class="game-header">
+        <button class="btn-back" onclick="showScreen('dashboard')">&larr; ABORT</button>
+        <div class="game-timer-display">Q: <span id="quiz-progress-text">1 / 10</span></div>
+        <div class="game-score-display">SCORE: <span id="quiz-score">0</span></div>
+      </div>
+
+      <div class="quiz-stage">
+        <div id="quiz-question" class="quiz-q-box">Loading question...</div>
+        <div class="quiz-options-grid" id="quiz-options">
+          <!-- 4 option buttons -->
+        </div>
+      </div>
+    </main>
+
+    <!-- SCORE OVERLAY SCREEN -->
+    <div id="score-overlay" class="modal-overlay hidden">
+      <div class="modal-card">
+        <h2 id="modal-title">GAME OVER</h2>
+        <div class="modal-score" id="modal-final-score">0 PTS</div>
+        <div class="modal-comment" id="modal-comment">"Impressive. Not in a good way."</div>
+        <div class="modal-actions">
+          <button id="modal-retry-btn" class="btn-primary">TRY AGAIN</button>
+          <button class="btn-secondary" onclick="showScreen('dashboard')">DASHBOARD</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
